@@ -36,7 +36,15 @@ The CLI can do much more for us:
 
 Located in the `src` folder.  
 As we can see in this `main.ts` file, the `NestFactory()` function creates our Nest app using the `AppModule` class.  
+And this is also where we specify which port the app listens to.  
 
 
+# 3. The app.module.ts file
 
+Also located in the `src` folder.  
+We have an empty class here, and before that we are calling an `@Module()` function.  
+
+That function is a **decorator**, a very important concept in NestJS.  
+
+# 4. Decorators
 
