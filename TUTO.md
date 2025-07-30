@@ -62,7 +62,7 @@ That decorator takes a **configuration object** as an argument.
 A **strong** recommendation is to **structure** your code in modules.  
 Each module will encapsulate a set of related capabilities.  
 
-Every NestJS app has one **root** module, only one.  
+Every NestJS app has one **root** module, and only one.  
 That root module can use other modules, which in turn can also use other modules...  
 
 This network of interconnected modules creates what is called the **application graph**.  
@@ -81,4 +81,91 @@ Both of these will be created inside the `src` folder.
 Let's do the same to create the topics and config modules:  
 `nest generate module topics`  
 `nest generate module config`  
+
+Each module has the `@Module()` decorator.  
+
+If we open the `app.module.ts` file, we can see that all the modules we've generated with the CLI have been added 
+to the `imports` property:
+```ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { EpisodesModule } from './episodes/episodes.module';
+import { TopicsModule } from './topics/topics.module';
+import { ConfigModule } from './config/config.module';
+
+@Module({
+  imports: [EpisodesModule, TopicsModule, ConfigModule],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+This means that the `AppModule` class uses all those modules.  
+The `imports` property is what defines how modules are organized.  
+
+We can remove the ConfigModule from the AppModule, to then import it in the EpisodesModule.  
+We can also import ConfigModule in the TopicsModule.  
+
+We now have the following application graph:  
+![application graph](image.png)
+
+# 6. Controllers
+
+If our app has no controller, then it cannot handle any incoming requests.  
+Controllers are the **entry point** for most NestJS apps.  
+
+A controller is simply a **class** that is decorated with the `@Controller()` decorator.  
+If we open the `app.controller.ts` file, we can see that decorator.  
+
+To create a controller inside the Episodes module, we can run this cmd:  
+`nest generate controller episodes`  
+
+And we can see that the generated controller takes a string as a parameter.  
+That string is the `route path` managed by the controller.  
+
+**But how do we know that the EpisodesController is part of the EpisodesModule?**  
+If we look at the episodes.module file, we can see that the CLI has added the new controller.  
+
+## Method decorators
+
+The controller classes have methods to handle requests.  
+
+For example, we can add a findAll() method to the EpisodesController.  
+For now, it just returns a string, but we will change that later.  
+To indicate that it handles the GET requests, we use the `@Get()` decorator.  
+
+It's the same principle for handling POST requests, or any other HTTP method.  
+
+Method decorators can also take a string as parameter, and that string can be a nested route path.  
+Let's say that we want a handler to return featured episodes, and we want that handler to be called 
+for the route "episodes/featured".  
+Check the code below to see how this can be done: 
+```ts
+import { Controller, Get, Post } from '@nestjs/common';
+
+@Controller('episodes')
+export class EpisodesController {
+  @Get()
+  findAll() {
+    return 'all episodes'
+  }
+
+  @Get('featured')
+  findFeatured() {
+    return 'featured episodes'
+  }
+
+  @Post()
+  create() {
+    return 'new episode'
+  }
+}
+```
+
+So far, we've used class decorators, and method decorators, but there's another type of decorators that 
+we haven't used yet.  
+
+Some handlers will need access to the URL parameters, queries, the request body, or event the entire request object.  
+For example, we can add a `sort` parameter to the findAll() method, and prefix it with the `@Query` decorator.  
 
