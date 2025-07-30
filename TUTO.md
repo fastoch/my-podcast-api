@@ -16,7 +16,7 @@ In this video, we'll see:
 - 10 key concepts
 - how to build a podcast API
 
-# 1. Nest CLI
+# 1. The Nest CLI
 
 This is Nest's secret weapon.  
 
@@ -47,4 +47,16 @@ We have an empty class here, and before that we are calling an `@Module()` funct
 That function is a **decorator**, a very important concept in NestJS.  
 
 # 4. Decorators
+
+Decorators are functions that can be applied to classes, methods, and method parameters.  
+They add **extra functionality** to the class, method, or parameter they apply to.  
+
+Some decorators have parameters so they can be configured to extract specific pieces of data 
+or alter their behavior based on the argument provided.  
+
+If we go back to the `app.module.ts` file, we can see that the `@Module()` decorator is applied to the `AppModule` class.  
+That decorator takes a **configuration object** as an argument.  
+
+# 5. Modules
+
 
