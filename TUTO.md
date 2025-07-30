@@ -59,4 +59,26 @@ That decorator takes a **configuration object** as an argument.
 
 # 5. Modules
 
+A **strong** recommendation is to **structure** your code in modules.  
+Each module will encapsulate a set of related capabilities.  
+
+Every NestJS app has one **root** module, only one.  
+That root module can use other modules, which in turn can also use other modules...  
+
+This network of interconnected modules creates what is called the **application graph**.  
+
+## Modules in our app
+
+In our app (my-podcast-api), `AppModule` is the **root** module.  
+We know this because it's the class used to create the application in the `main.ts` file.  
+
+Our Nest app will also have an `EpisodesModule`, a `TopicsModule`, and a `ConfigModule`.  
+
+To create a Nest module from the CLI: `nest generate module episodes`  
+This will generate an `episodes` folder and an `episodes.module.ts` file inside of it.  
+Both of these will be created inside the `src` folder.  
+
+Let's do the same to create the topics and config modules:  
+`nest generate module topics`  
+`nest generate module config`  
 
