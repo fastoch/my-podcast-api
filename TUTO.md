@@ -272,6 +272,8 @@ Let's recap what we have built so far:
 - both EpisodesModule and TopicsModule import the ConfigModule
 - inside EpisodesModule, we have EpisodesController and EpisodesService 
 
+## Injecting EpisodesService in EpisodesController
+
 The **controller** needs to use the **service** class, but in Nest we don't create an instance 
 of the service inside the controller. Instead, the service class will be **injected** in the 
 controller by NestJS at **runtime**.  
@@ -310,16 +312,28 @@ create(@Body() input: CreateEpisodeDto) {
 ```
 For the `create()` method, we have replaced the ugly `any` with `CreateEpisodeDto`.  
 
-## What if we want to inject a service from another module?
-
-Let's say a config **service** inside the config **module**.  
+## What if we want to inject a service from one module to another?
 
 We can quickly create a config service using the **CLI**: `nest generate service config`.  
 We can also use **shortcuts** with the CLI: `nest g s config` is equivalent to the previous cmd.  
 
-As usual, the CLI will automatically add the new service to the **providers** list in the **module**.  
+As usual, the CLI will automatically add the new service to the **providers** list in `config.module`.  
 
 Now, we need to add the config service to the **exports** list.  
 ```ts
+@Module({
+  providers: [ConfigService],
+  exports: [ConfigService]
+})
+export class ConfigModule {}
+```
 
+We then need to make sure that EpisodesModule imports ConfigModule:
+```ts
+@Module({
+  imports: [ConfigModule],
+  controllers: [EpisodesController],
+  providers: [EpisodesService]
+})
+export class EpisodesModule {}
 ```
