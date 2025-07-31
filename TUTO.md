@@ -336,4 +336,21 @@ We then need to make sure that EpisodesModule imports ConfigModule:
   providers: [EpisodesService]
 })
 export class EpisodesModule {}
+```  
+
+Finally, we can inject the config service in the episodes controller:
+```ts
+import { Controller, Get, Post, Query, Body, Param } from '@nestjs/common';
+import { EpisodesService } from './episodes.service';
+import { ConfigService } from '../config/config.service';
+import { CreateEpisodeDto } from './episodes.dto';
+
+@Controller('episodes')
+export class EpisodesController {
+  constructor(
+    private episodesService: EpisodesService,
+    private configService: ConfigService 
+  ) {}
+  // Request Handlers
+}
 ```
