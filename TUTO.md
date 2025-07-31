@@ -251,10 +251,14 @@ to the **providers** list, otherwise they can't be injected in other classes.
 
 ## Implementing the EpisodeService class
 
-We need a few basic methods to manage the episodes data.  
-```ts
+We need a few basic **methods** to manage the episodes data.  
+These methods' implementation can be seen in the `episodes.service.ts` file.  
 
-```
-The `Episode` type is defined in a dedicated file = `episodes.dto.ts`.  
-It's best practice to define data structures like this in a **Data Transfer Object** (DTO) file.  
+All these methods ve been declared as **asynchronous** even if there's nothing asynchronous 
+going on yet (no `await` keyword), since we use an **in-memory** array for this demo.  
+
+In a real app, we would most likely store and retrieve the data asynchronously from a database.  
+
+Note that the `Episode` type is defined in a dedicated file = `episodes.dto.ts`.  
+It's best practice to define data structures in a **Data Transfer Object** (DTO) file.  
 
