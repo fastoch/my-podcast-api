@@ -57,6 +57,8 @@ or alter their behavior based on the argument provided.
 If we go back to the `app.module.ts` file, we can see that the `@Module()` decorator is applied to the `AppModule` class.  
 That decorator takes a **configuration object** as an argument.  
 
+**Note**: it's possible to create custom decorators, but we won't see that topic in this crash course.
+
 # 5. Modules
 
 A **strong** recommendation is to **structure** your code in modules.  
@@ -129,7 +131,7 @@ If we look at the episodes.module file, we can see that the CLI has added the ne
 
 ## Method decorators
 
-The controller classes have methods to handle requests.  
+The controller classes have **methods** to handle requests = request **handlers**.  
 
 For example, we can add a findAll() method to the EpisodesController.  
 For now, it just returns a string, but we will change that later.  
@@ -166,6 +168,54 @@ export class EpisodesController {
 So far, we've used class decorators, and method decorators, but there's another type of decorators that 
 we haven't used yet.  
 
-Some handlers will need access to the URL parameters, queries, the request body, or event the entire request object.  
+Some handlers will need access to the URL parameters, queries, the request body, or even the entire request object.  
 For example, we can add a `sort` parameter to the findAll() method, and prefix it with the `@Query` decorator.  
+We can do the same thing by prefixing other methods with `@Body` or `@Param`:
+```ts
+import { Controller, Get, Post, Query, Body, Param } from '@nestjs/common';
+
+@Controller('episodes')
+export class EpisodesController {
+  @Get()
+  findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc') {
+    console.log(sort)  // this is just to make use of sort
+    return 'all episodes'
+  }
+
+  @Get('featured')
+  findFeatured() {
+    return 'featured episodes'
+  }
+
+  @Get(':id')
+  findOne(@Param() id: string) {
+    console.log(id)  // this is just to make use of id
+    return 'one episode'
+  }
+
+  @Post()
+  create(@Body() input: any) {
+    console.log(input)  // this is just to make use of input
+    return 'new episode'
+  }
+}
+```
+**Note**: in the handler that gets an episode by id, we use the `:id` syntax because we want it to be a URL parameter.  
+
+## Testing the controllers
+
+With this simple implementation of the controllers, we can send requests to the route we've defined, 
+or we can also open up a web browser and navigate to these routes: 
+- http://localhost:3000/ will return/display a simple "Hello World!"
+- http://localhost:3000/episodes will return/display "all episodes"
+- http://localhost:3000/episodes/featured will return/display "featured episodes"
+- http://localhost:3000/episodes/id will return/display "one episode"
+
+Our handlers are doing a great job at receiving incoming requests and returning a response to the client.  
+But there is a big piece missing...  
+
+Instead of returning mock responses, our handlers need to delegate the real work of finding and creating
+episodes to a **service**.
+
+# 7. Services
 
