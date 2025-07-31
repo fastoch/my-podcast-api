@@ -255,3 +255,6 @@ We need a few basic methods to manage the episodes data.
 ```ts
 
 ```
+The `Episode` type is defined in a dedicated file = `episodes.dto.ts`.  
+It's best practice to define data structures like this in a **Data Transfer Object** (DTO) file.  
+

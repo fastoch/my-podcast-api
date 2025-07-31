@@ -2,17 +2,27 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EpisodesService {
-  private episodes: Episode[] = []
-  
+  private episodes: Episode[] = [];
+
   /**
    * method that retrieves all episodes & sort them based on their name
    */
-  async findAll(sort: 'asc' | 'desc' = 'asc') {
-    const sortAsc = (a: Episode, b: Episode) => (a.name > b.name ? 1 : -1)
-    const sortDesc = (a: Episode, b: Episode) => (a.name < b.name ? 1 : -1)
+  async findAll(order: 'asc' | 'desc' = 'asc'): Promise<Episode[]> {
+    // create a copy to avoid mutating the original array
+    const sorted = [...this.episodes];
 
-    return sort === 'asc'
-      ? this.episodes.sort(sortAsc)
-      : this.episodes.sort(sortDesc)
+    // use the built-in sort() and localeCompare() methods for proper sorting of a String[]
+    sorted.sort((a: Episode, b: Episode) => 
+      order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    )
+    return sorted
+  }
+
+  async findFeatured() {
+    return this.episodes.find((episode) => episode.featured)
+  }
+
+  async findOne(id: string) {
+
   }
 }
