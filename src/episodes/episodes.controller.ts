@@ -4,27 +4,25 @@ import { CreateEpisodeDto } from './episodes.dto';
 
 @Controller('episodes')
 export class EpisodesController {
+  constructor(private episodesService: EpisodesService) {}
 
   @Get()
   findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc') {
-    console.log(sort)  // this is just to make use of sort
-    return 'all episodes'
+    return this.episodesService.findAll(sort)
   }
 
   @Get('featured')
   findFeatured() {
-    return 'featured episodes'
+    return this.episodesService.findFeatured()
   }
 
   @Get(':id')
   findOne(@Param() id: string) {
-    console.log(id)  // this is just to make use of id
-    return 'one episode'
+    return this.episodesService.findOne(id)
   }
 
   @Post()
-  create(@Body() input: any) {
-    console.log(input)  // this is just to make use of input
-    return 'new episode'
+  create(@Body() input: CreateEpisodeDto) {
+    return this.episodesService.create(input)
   }
 }

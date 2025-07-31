@@ -246,19 +246,80 @@ export class EpisodesModule {}
 
 ### Very important note
 
-The above part is **crucial** if we create our providers manually because we need to **make sure to add them**
-to the **providers** list, otherwise they can't be injected in other classes.  
+The above part is **crucial** if we create our providers manually, because we need to 
+**make sure to add them** to the **providers** list, otherwise they can't be injected in other classes.  
 
-## Implementing the EpisodeService class
+## Implementing the EpisodesService class
 
 We need a few basic **methods** to manage the episodes data.  
 These methods' implementation can be seen in the `episodes.service.ts` file.  
 
-All these methods ve been declared as **asynchronous** even if there's nothing asynchronous 
-going on yet (no `await` keyword), since we use an **in-memory** array for this demo.  
-
-In a real app, we would most likely store and retrieve the data asynchronously from a database.  
+All these methods have been declared as **asynchronous** even if there's nothing asynchronous 
+going on yet (no `await` keyword), since we use an **in-memory** array for this demo.
+In a real app, we would most likely store and retrieve the data **asynchronously** from a database.  
 
 Note that the `Episode` type is defined in a dedicated file = `episodes.dto.ts`.  
-It's best practice to define data structures in a **Data Transfer Object** (DTO) file.  
+And so is `CreateEpisodeDto`, which is an episode with no id.  
+It's best practice to define data structures in a **Data Transfer Object** (DTO) file.
 
+# 8. Dependency Injection
+
+**What's the point of having a service if it's not used anywhere?**  
+Now is time to talk about another pillar of NestJS: **Dependency Injection**.  
+
+Let's recap what we have built so far:
+- a root module = app.module.ts, which imports EpisodesModule and TopicsModule
+- both EpisodesModule and TopicsModule import the ConfigModule
+- inside EpisodesModule, we have EpisodesController and EpisodesService 
+
+The **controller** needs to use the **service** class, but in Nest we don't create an instance 
+of the service inside the controller. Instead, the service class will be **injected** in the 
+controller by NestJS at **runtime**.  
+
+One way to tell Nest to inject the service in the controller is to add a constructor to 
+the controller class.  
+
+**That's how Dependency Injection works in NestJS:**
+- you create the provider class (service) with the `@Injectable` decorator
+- you make sure to declare the provider in the module
+- and you inject this provider in the controller class constructor
+- After that, the framework (Nest) takes care of wiring things up at runtime
+
+Now, instead of returning strings, the handlers (inside `episodes.controller`) can call 
+the injected service methods:
+```ts
+@Get()
+findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc') {
+  return this.episodesService.findAll(sort)
+}
+
+@Get('featured')
+findFeatured() {
+  return this.episodesService.findFeatured()
+}
+
+@Get(':id')
+findOne(@Param() id: string) {
+  return this.episodesService.findOne(id)
+}
+
+@Post()
+create(@Body() input: CreateEpisodeDto) {
+  return this.episodesService.create(input)
+}
+```
+For the `create()` method, we have replaced the ugly `any` with `CreateEpisodeDto`.  
+
+## What if we want to inject a service from another module?
+
+Let's say a config **service** inside the config **module**.  
+
+We can quickly create a config service using the **CLI**: `nest generate service config`.  
+We can also use **shortcuts** with the CLI: `nest g s config` is equivalent to the previous cmd.  
+
+As usual, the CLI will automatically add the new service to the **providers** list in the **module**.  
+
+Now, we need to add the config service to the **exports** list.  
+```ts
+
+```
