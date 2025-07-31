@@ -354,3 +354,12 @@ export class EpisodesController {
   // Request Handlers
 }
 ```
+
+# 9. Testing
+
+The CLI has created test files for us, but we've ignored them so far.  
+Let's have a look at what's inside the generated test files for the episodes.controller.  
+
+Nest provides testing utilities to 
+
+NOT FINISHED
