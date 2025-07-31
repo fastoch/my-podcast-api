@@ -217,5 +217,41 @@ But there is a big piece missing...
 Instead of returning mock responses, our handlers need to delegate the real work of finding and creating
 episodes to a **service**.
 
-# 7. Services
+# 7. Providers
 
+Services are part of a bigger NestJS family: the **Providers**.  
+Nearly everything in Nest is a provider.  
+
+Providers are **classes** that have the `@Injectable` decorator.  
+This means that they can be injected in other classes.  
+
+## Service creation
+
+Let's create the episodes service via the CLI: `nest generate service episodes`.  
+On top of creating the `episodes.service.ts` file and the test file, the CLI will automatically add
+the new service to the providers list in the module (`episodes.module.ts`):
+```ts
+import { Module } from '@nestjs/common';
+import { EpisodesController } from './episodes.controller';
+import { ConfigModule } from 'src/config/config.module';
+import { EpisodesService } from './episodes.service';
+
+@Module({
+  imports: [ConfigModule],
+  controllers: [EpisodesController],
+  providers: [EpisodesService]
+})
+export class EpisodesModule {}
+```
+
+### Very important note
+
+The above part is **crucial** if we create our providers manually because we need to **make sure to add them**
+to the **providers** list, otherwise they can't be injected in other classes.  
+
+## Implementing the EpisodeService class
+
+We need a few basic methods to manage the episodes data.  
+```ts
+
+```
